@@ -1,0 +1,21 @@
+syntax = "proto3";
+option java_package = "com.example.grpc";
+
+message SetKeyValueRequest{
+	int32 key = 1;
+	string value = 2;
+}
+
+message GetValueRequest{
+	int32 key = 1;
+}
+
+message Status{
+	int32 code = 1;
+	string value = 2;
+}
+
+service KeyValue{
+	rpc setKV(SetKeyValueRequest) returns (Status){}
+	rpc getKV(GetValueRequest) returns (Status){}
+}
