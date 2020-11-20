@@ -2,7 +2,6 @@ package KeyValue;
 
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
-
 import java.io.IOException;
 
 public class KeyValueServer {
@@ -24,8 +23,7 @@ public class KeyValueServer {
         serverBuilder.addService(keyValueService);
         Server server = serverBuilder.build();
         server.start();
-        server.awaitTermination();
-
         System.out.println("Server started at port:" + server.getPort());
+        server.awaitTermination();
     }
 }

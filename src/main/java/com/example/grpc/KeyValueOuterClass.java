@@ -19,19 +19,22 @@ public final class KeyValueOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 key = 1;</code>
+     * <code>bytes key = 1;</code>
      */
-    int getKey();
+    com.google.protobuf.ByteString getKey();
 
     /**
-     * <code>string value = 2;</code>
+     * <code>.Value value = 2;</code>
      */
-    java.lang.String getValue();
+    boolean hasValue();
     /**
-     * <code>string value = 2;</code>
+     * <code>.Value value = 2;</code>
      */
-    com.google.protobuf.ByteString
-        getValueBytes();
+    com.example.grpc.KeyValueOuterClass.Value getValue();
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder();
   }
   /**
    * Protobuf type {@code SetKeyValueRequest}
@@ -45,8 +48,7 @@ public final class KeyValueOuterClass {
       super(builder);
     }
     private SetKeyValueRequest() {
-      key_ = 0;
-      value_ = "";
+      key_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -74,15 +76,22 @@ public final class KeyValueOuterClass {
               }
               break;
             }
-            case 8: {
+            case 10: {
 
-              key_ = input.readInt32();
+              key_ = input.readBytes();
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+              com.example.grpc.KeyValueOuterClass.Value.Builder subBuilder = null;
+              if (value_ != null) {
+                subBuilder = value_.toBuilder();
+              }
+              value_ = input.readMessage(com.example.grpc.KeyValueOuterClass.Value.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(value_);
+                value_ = subBuilder.buildPartial();
+              }
 
-              value_ = s;
               break;
             }
           }
@@ -109,46 +118,33 @@ public final class KeyValueOuterClass {
     }
 
     public static final int KEY_FIELD_NUMBER = 1;
-    private int key_;
+    private com.google.protobuf.ByteString key_;
     /**
-     * <code>int32 key = 1;</code>
+     * <code>bytes key = 1;</code>
      */
-    public int getKey() {
+    public com.google.protobuf.ByteString getKey() {
       return key_;
     }
 
     public static final int VALUE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object value_;
+    private com.example.grpc.KeyValueOuterClass.Value value_;
     /**
-     * <code>string value = 2;</code>
+     * <code>.Value value = 2;</code>
      */
-    public java.lang.String getValue() {
-      java.lang.Object ref = value_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        value_ = s;
-        return s;
-      }
+    public boolean hasValue() {
+      return value_ != null;
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>.Value value = 2;</code>
      */
-    public com.google.protobuf.ByteString
-        getValueBytes() {
-      java.lang.Object ref = value_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        value_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
+    public com.example.grpc.KeyValueOuterClass.Value getValue() {
+      return value_ == null ? com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
+    }
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    public com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder() {
+      return getValue();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -163,11 +159,11 @@ public final class KeyValueOuterClass {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (key_ != 0) {
-        output.writeInt32(1, key_);
+      if (!key_.isEmpty()) {
+        output.writeBytes(1, key_);
       }
-      if (!getValueBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+      if (value_ != null) {
+        output.writeMessage(2, getValue());
       }
     }
 
@@ -176,12 +172,13 @@ public final class KeyValueOuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (key_ != 0) {
+      if (!key_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, key_);
+          .computeBytesSize(1, key_);
       }
-      if (!getValueBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+      if (value_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getValue());
       }
       memoizedSize = size;
       return size;
@@ -199,10 +196,13 @@ public final class KeyValueOuterClass {
       com.example.grpc.KeyValueOuterClass.SetKeyValueRequest other = (com.example.grpc.KeyValueOuterClass.SetKeyValueRequest) obj;
 
       boolean result = true;
-      result = result && (getKey()
-          == other.getKey());
-      result = result && getValue()
-          .equals(other.getValue());
+      result = result && getKey()
+          .equals(other.getKey());
+      result = result && (hasValue() == other.hasValue());
+      if (hasValue()) {
+        result = result && getValue()
+            .equals(other.getValue());
+      }
       return result;
     }
 
@@ -214,9 +214,11 @@ public final class KeyValueOuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getKey();
-      hash = (37 * hash) + VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getValue().hashCode();
+      hash = (53 * hash) + getKey().hashCode();
+      if (hasValue()) {
+        hash = (37 * hash) + VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getValue().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -346,10 +348,14 @@ public final class KeyValueOuterClass {
       }
       public Builder clear() {
         super.clear();
-        key_ = 0;
+        key_ = com.google.protobuf.ByteString.EMPTY;
 
-        value_ = "";
-
+        if (valueBuilder_ == null) {
+          value_ = null;
+        } else {
+          value_ = null;
+          valueBuilder_ = null;
+        }
         return this;
       }
 
@@ -373,7 +379,11 @@ public final class KeyValueOuterClass {
       public com.example.grpc.KeyValueOuterClass.SetKeyValueRequest buildPartial() {
         com.example.grpc.KeyValueOuterClass.SetKeyValueRequest result = new com.example.grpc.KeyValueOuterClass.SetKeyValueRequest(this);
         result.key_ = key_;
-        result.value_ = value_;
+        if (valueBuilder_ == null) {
+          result.value_ = value_;
+        } else {
+          result.value_ = valueBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -415,12 +425,11 @@ public final class KeyValueOuterClass {
 
       public Builder mergeFrom(com.example.grpc.KeyValueOuterClass.SetKeyValueRequest other) {
         if (other == com.example.grpc.KeyValueOuterClass.SetKeyValueRequest.getDefaultInstance()) return this;
-        if (other.getKey() != 0) {
+        if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
           setKey(other.getKey());
         }
-        if (!other.getValue().isEmpty()) {
-          value_ = other.value_;
-          onChanged();
+        if (other.hasValue()) {
+          mergeValue(other.getValue());
         }
         onChanged();
         return this;
@@ -448,99 +457,150 @@ public final class KeyValueOuterClass {
         return this;
       }
 
-      private int key_ ;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
-      public int getKey() {
+      public com.google.protobuf.ByteString getKey() {
         return key_;
       }
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
-      public Builder setKey(int value) {
-        
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         key_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
       public Builder clearKey() {
         
-        key_ = 0;
+        key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
 
-      private java.lang.Object value_ = "";
+      private com.example.grpc.KeyValueOuterClass.Value value_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder> valueBuilder_;
       /**
-       * <code>string value = 2;</code>
+       * <code>.Value value = 2;</code>
        */
-      public java.lang.String getValue() {
-        java.lang.Object ref = value_;
-        if (!(ref instanceof java.lang.String)) {
-          com.google.protobuf.ByteString bs =
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          value_ = s;
-          return s;
+      public boolean hasValue() {
+        return valueBuilder_ != null || value_ != null;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.Value getValue() {
+        if (valueBuilder_ == null) {
+          return value_ == null ? com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
         } else {
-          return (java.lang.String) ref;
+          return valueBuilder_.getMessage();
         }
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>.Value value = 2;</code>
        */
-      public com.google.protobuf.ByteString
-          getValueBytes() {
-        java.lang.Object ref = value_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          value_ = b;
-          return b;
+      public Builder setValue(com.example.grpc.KeyValueOuterClass.Value value) {
+        if (valueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          value_ = value;
+          onChanged();
         } else {
-          return (com.google.protobuf.ByteString) ref;
+          valueBuilder_.setMessage(value);
         }
+
+        return this;
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>.Value value = 2;</code>
        */
       public Builder setValue(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  
-        value_ = value;
-        onChanged();
+          com.example.grpc.KeyValueOuterClass.Value.Builder builderForValue) {
+        if (valueBuilder_ == null) {
+          value_ = builderForValue.build();
+          onChanged();
+        } else {
+          valueBuilder_.setMessage(builderForValue.build());
+        }
+
         return this;
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>.Value value = 2;</code>
+       */
+      public Builder mergeValue(com.example.grpc.KeyValueOuterClass.Value value) {
+        if (valueBuilder_ == null) {
+          if (value_ != null) {
+            value_ =
+              com.example.grpc.KeyValueOuterClass.Value.newBuilder(value_).mergeFrom(value).buildPartial();
+          } else {
+            value_ = value;
+          }
+          onChanged();
+        } else {
+          valueBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.Value value = 2;</code>
        */
       public Builder clearValue() {
-        
-        value_ = getDefaultInstance().getValue();
-        onChanged();
+        if (valueBuilder_ == null) {
+          value_ = null;
+          onChanged();
+        } else {
+          value_ = null;
+          valueBuilder_ = null;
+        }
+
         return this;
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>.Value value = 2;</code>
        */
-      public Builder setValueBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
+      public com.example.grpc.KeyValueOuterClass.Value.Builder getValueBuilder() {
         
-        value_ = value;
         onChanged();
-        return this;
+        return getValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder() {
+        if (valueBuilder_ != null) {
+          return valueBuilder_.getMessageOrBuilder();
+        } else {
+          return value_ == null ?
+              com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
+        }
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder> 
+          getValueFieldBuilder() {
+        if (valueBuilder_ == null) {
+          valueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder>(
+                  getValue(),
+                  getParentForChildren(),
+                  isClean());
+          value_ = null;
+        }
+        return valueBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -591,14 +651,779 @@ public final class KeyValueOuterClass {
 
   }
 
+  public interface ValueOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:Value)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int64 version = 1;</code>
+     */
+    long getVersion();
+
+    /**
+     * <code>int64 timestamp = 2;</code>
+     */
+    long getTimestamp();
+
+    /**
+     * <code>bytes data = 3;</code>
+     */
+    com.google.protobuf.ByteString getData();
+
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    boolean hasNullableValue();
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    com.google.protobuf.BytesValue getNullableValue();
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    com.google.protobuf.BytesValueOrBuilder getNullableValueOrBuilder();
+  }
+  /**
+   * Protobuf type {@code Value}
+   */
+  public  static final class Value extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:Value)
+      ValueOrBuilder {
+    // Use Value.newBuilder() to construct.
+    private Value(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Value() {
+      version_ = 0L;
+      timestamp_ = 0L;
+      data_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private Value(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+
+              version_ = input.readInt64();
+              break;
+            }
+            case 16: {
+
+              timestamp_ = input.readInt64();
+              break;
+            }
+            case 26: {
+
+              data_ = input.readBytes();
+              break;
+            }
+            case 34: {
+              com.google.protobuf.BytesValue.Builder subBuilder = null;
+              if (nullableValue_ != null) {
+                subBuilder = nullableValue_.toBuilder();
+              }
+              nullableValue_ = input.readMessage(com.google.protobuf.BytesValue.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(nullableValue_);
+                nullableValue_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.example.grpc.KeyValueOuterClass.internal_static_Value_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.example.grpc.KeyValueOuterClass.internal_static_Value_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.example.grpc.KeyValueOuterClass.Value.class, com.example.grpc.KeyValueOuterClass.Value.Builder.class);
+    }
+
+    public static final int VERSION_FIELD_NUMBER = 1;
+    private long version_;
+    /**
+     * <code>int64 version = 1;</code>
+     */
+    public long getVersion() {
+      return version_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 2;
+    private long timestamp_;
+    /**
+     * <code>int64 timestamp = 2;</code>
+     */
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString data_;
+    /**
+     * <code>bytes data = 3;</code>
+     */
+    public com.google.protobuf.ByteString getData() {
+      return data_;
+    }
+
+    public static final int NULLABLEVALUE_FIELD_NUMBER = 4;
+    private com.google.protobuf.BytesValue nullableValue_;
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    public boolean hasNullableValue() {
+      return nullableValue_ != null;
+    }
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    public com.google.protobuf.BytesValue getNullableValue() {
+      return nullableValue_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : nullableValue_;
+    }
+    /**
+     * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+     */
+    public com.google.protobuf.BytesValueOrBuilder getNullableValueOrBuilder() {
+      return getNullableValue();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (version_ != 0L) {
+        output.writeInt64(1, version_);
+      }
+      if (timestamp_ != 0L) {
+        output.writeInt64(2, timestamp_);
+      }
+      if (!data_.isEmpty()) {
+        output.writeBytes(3, data_);
+      }
+      if (nullableValue_ != null) {
+        output.writeMessage(4, getNullableValue());
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (version_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(1, version_);
+      }
+      if (timestamp_ != 0L) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(2, timestamp_);
+      }
+      if (!data_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, data_);
+      }
+      if (nullableValue_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getNullableValue());
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.example.grpc.KeyValueOuterClass.Value)) {
+        return super.equals(obj);
+      }
+      com.example.grpc.KeyValueOuterClass.Value other = (com.example.grpc.KeyValueOuterClass.Value) obj;
+
+      boolean result = true;
+      result = result && (getVersion()
+          == other.getVersion());
+      result = result && (getTimestamp()
+          == other.getTimestamp());
+      result = result && getData()
+          .equals(other.getData());
+      result = result && (hasNullableValue() == other.hasNullableValue());
+      if (hasNullableValue()) {
+        result = result && getNullableValue()
+            .equals(other.getNullableValue());
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + VERSION_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getVersion());
+      hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+      hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+          getTimestamp());
+      hash = (37 * hash) + DATA_FIELD_NUMBER;
+      hash = (53 * hash) + getData().hashCode();
+      if (hasNullableValue()) {
+        hash = (37 * hash) + NULLABLEVALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getNullableValue().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.Value parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.example.grpc.KeyValueOuterClass.Value prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code Value}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:Value)
+        com.example.grpc.KeyValueOuterClass.ValueOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_Value_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_Value_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.example.grpc.KeyValueOuterClass.Value.class, com.example.grpc.KeyValueOuterClass.Value.Builder.class);
+      }
+
+      // Construct using com.example.grpc.KeyValueOuterClass.Value.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        version_ = 0L;
+
+        timestamp_ = 0L;
+
+        data_ = com.google.protobuf.ByteString.EMPTY;
+
+        if (nullableValueBuilder_ == null) {
+          nullableValue_ = null;
+        } else {
+          nullableValue_ = null;
+          nullableValueBuilder_ = null;
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_Value_descriptor;
+      }
+
+      public com.example.grpc.KeyValueOuterClass.Value getDefaultInstanceForType() {
+        return com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance();
+      }
+
+      public com.example.grpc.KeyValueOuterClass.Value build() {
+        com.example.grpc.KeyValueOuterClass.Value result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.example.grpc.KeyValueOuterClass.Value buildPartial() {
+        com.example.grpc.KeyValueOuterClass.Value result = new com.example.grpc.KeyValueOuterClass.Value(this);
+        result.version_ = version_;
+        result.timestamp_ = timestamp_;
+        result.data_ = data_;
+        if (nullableValueBuilder_ == null) {
+          result.nullableValue_ = nullableValue_;
+        } else {
+          result.nullableValue_ = nullableValueBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.example.grpc.KeyValueOuterClass.Value) {
+          return mergeFrom((com.example.grpc.KeyValueOuterClass.Value)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.example.grpc.KeyValueOuterClass.Value other) {
+        if (other == com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance()) return this;
+        if (other.getVersion() != 0L) {
+          setVersion(other.getVersion());
+        }
+        if (other.getTimestamp() != 0L) {
+          setTimestamp(other.getTimestamp());
+        }
+        if (other.getData() != com.google.protobuf.ByteString.EMPTY) {
+          setData(other.getData());
+        }
+        if (other.hasNullableValue()) {
+          mergeNullableValue(other.getNullableValue());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.example.grpc.KeyValueOuterClass.Value parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.example.grpc.KeyValueOuterClass.Value) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private long version_ ;
+      /**
+       * <code>int64 version = 1;</code>
+       */
+      public long getVersion() {
+        return version_;
+      }
+      /**
+       * <code>int64 version = 1;</code>
+       */
+      public Builder setVersion(long value) {
+        
+        version_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 version = 1;</code>
+       */
+      public Builder clearVersion() {
+        
+        version_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private long timestamp_ ;
+      /**
+       * <code>int64 timestamp = 2;</code>
+       */
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>int64 timestamp = 2;</code>
+       */
+      public Builder setTimestamp(long value) {
+        
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int64 timestamp = 2;</code>
+       */
+      public Builder clearTimestamp() {
+        
+        timestamp_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>bytes data = 3;</code>
+       */
+      public com.google.protobuf.ByteString getData() {
+        return data_;
+      }
+      /**
+       * <code>bytes data = 3;</code>
+       */
+      public Builder setData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        data_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>bytes data = 3;</code>
+       */
+      public Builder clearData() {
+        
+        data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.BytesValue nullableValue_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> nullableValueBuilder_;
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public boolean hasNullableValue() {
+        return nullableValueBuilder_ != null || nullableValue_ != null;
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public com.google.protobuf.BytesValue getNullableValue() {
+        if (nullableValueBuilder_ == null) {
+          return nullableValue_ == null ? com.google.protobuf.BytesValue.getDefaultInstance() : nullableValue_;
+        } else {
+          return nullableValueBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public Builder setNullableValue(com.google.protobuf.BytesValue value) {
+        if (nullableValueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          nullableValue_ = value;
+          onChanged();
+        } else {
+          nullableValueBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public Builder setNullableValue(
+          com.google.protobuf.BytesValue.Builder builderForValue) {
+        if (nullableValueBuilder_ == null) {
+          nullableValue_ = builderForValue.build();
+          onChanged();
+        } else {
+          nullableValueBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public Builder mergeNullableValue(com.google.protobuf.BytesValue value) {
+        if (nullableValueBuilder_ == null) {
+          if (nullableValue_ != null) {
+            nullableValue_ =
+              com.google.protobuf.BytesValue.newBuilder(nullableValue_).mergeFrom(value).buildPartial();
+          } else {
+            nullableValue_ = value;
+          }
+          onChanged();
+        } else {
+          nullableValueBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public Builder clearNullableValue() {
+        if (nullableValueBuilder_ == null) {
+          nullableValue_ = null;
+          onChanged();
+        } else {
+          nullableValue_ = null;
+          nullableValueBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public com.google.protobuf.BytesValue.Builder getNullableValueBuilder() {
+        
+        onChanged();
+        return getNullableValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      public com.google.protobuf.BytesValueOrBuilder getNullableValueOrBuilder() {
+        if (nullableValueBuilder_ != null) {
+          return nullableValueBuilder_.getMessageOrBuilder();
+        } else {
+          return nullableValue_ == null ?
+              com.google.protobuf.BytesValue.getDefaultInstance() : nullableValue_;
+        }
+      }
+      /**
+       * <code>.google.protobuf.BytesValue nullableValue = 4;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder> 
+          getNullableValueFieldBuilder() {
+        if (nullableValueBuilder_ == null) {
+          nullableValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.BytesValue, com.google.protobuf.BytesValue.Builder, com.google.protobuf.BytesValueOrBuilder>(
+                  getNullableValue(),
+                  getParentForChildren(),
+                  isClean());
+          nullableValue_ = null;
+        }
+        return nullableValueBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:Value)
+    }
+
+    // @@protoc_insertion_point(class_scope:Value)
+    private static final com.example.grpc.KeyValueOuterClass.Value DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.example.grpc.KeyValueOuterClass.Value();
+    }
+
+    public static com.example.grpc.KeyValueOuterClass.Value getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Value>
+        PARSER = new com.google.protobuf.AbstractParser<Value>() {
+      public Value parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Value(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Value> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Value> getParserForType() {
+      return PARSER;
+    }
+
+    public com.example.grpc.KeyValueOuterClass.Value getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   public interface GetValueRequestOrBuilder extends
       // @@protoc_insertion_point(interface_extends:GetValueRequest)
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 key = 1;</code>
+     * <code>bytes key = 1;</code>
      */
-    int getKey();
+    com.google.protobuf.ByteString getKey();
   }
   /**
    * Protobuf type {@code GetValueRequest}
@@ -612,7 +1437,7 @@ public final class KeyValueOuterClass {
       super(builder);
     }
     private GetValueRequest() {
-      key_ = 0;
+      key_ = com.google.protobuf.ByteString.EMPTY;
     }
 
     @java.lang.Override
@@ -640,9 +1465,9 @@ public final class KeyValueOuterClass {
               }
               break;
             }
-            case 8: {
+            case 10: {
 
-              key_ = input.readInt32();
+              key_ = input.readBytes();
               break;
             }
           }
@@ -669,11 +1494,11 @@ public final class KeyValueOuterClass {
     }
 
     public static final int KEY_FIELD_NUMBER = 1;
-    private int key_;
+    private com.google.protobuf.ByteString key_;
     /**
-     * <code>int32 key = 1;</code>
+     * <code>bytes key = 1;</code>
      */
-    public int getKey() {
+    public com.google.protobuf.ByteString getKey() {
       return key_;
     }
 
@@ -689,8 +1514,8 @@ public final class KeyValueOuterClass {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (key_ != 0) {
-        output.writeInt32(1, key_);
+      if (!key_.isEmpty()) {
+        output.writeBytes(1, key_);
       }
     }
 
@@ -699,9 +1524,9 @@ public final class KeyValueOuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (key_ != 0) {
+      if (!key_.isEmpty()) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, key_);
+          .computeBytesSize(1, key_);
       }
       memoizedSize = size;
       return size;
@@ -719,8 +1544,8 @@ public final class KeyValueOuterClass {
       com.example.grpc.KeyValueOuterClass.GetValueRequest other = (com.example.grpc.KeyValueOuterClass.GetValueRequest) obj;
 
       boolean result = true;
-      result = result && (getKey()
-          == other.getKey());
+      result = result && getKey()
+          .equals(other.getKey());
       return result;
     }
 
@@ -732,7 +1557,7 @@ public final class KeyValueOuterClass {
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
       hash = (37 * hash) + KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getKey();
+      hash = (53 * hash) + getKey().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -862,7 +1687,7 @@ public final class KeyValueOuterClass {
       }
       public Builder clear() {
         super.clear();
-        key_ = 0;
+        key_ = com.google.protobuf.ByteString.EMPTY;
 
         return this;
       }
@@ -928,7 +1753,7 @@ public final class KeyValueOuterClass {
 
       public Builder mergeFrom(com.example.grpc.KeyValueOuterClass.GetValueRequest other) {
         if (other == com.example.grpc.KeyValueOuterClass.GetValueRequest.getDefaultInstance()) return this;
-        if (other.getKey() != 0) {
+        if (other.getKey() != com.google.protobuf.ByteString.EMPTY) {
           setKey(other.getKey());
         }
         onChanged();
@@ -957,28 +1782,31 @@ public final class KeyValueOuterClass {
         return this;
       }
 
-      private int key_ ;
+      private com.google.protobuf.ByteString key_ = com.google.protobuf.ByteString.EMPTY;
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
-      public int getKey() {
+      public com.google.protobuf.ByteString getKey() {
         return key_;
       }
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
-      public Builder setKey(int value) {
-        
+      public Builder setKey(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
         key_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>int32 key = 1;</code>
+       * <code>bytes key = 1;</code>
        */
       public Builder clearKey() {
         
-        key_ = 0;
+        key_ = getDefaultInstance().getKey();
         onChanged();
         return this;
       }
@@ -1036,19 +1864,40 @@ public final class KeyValueOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>int32 code = 1;</code>
+     * <code>string status = 1;</code>
      */
-    int getCode();
-
+    java.lang.String getStatus();
     /**
-     * <code>string value = 2;</code>
-     */
-    java.lang.String getValue();
-    /**
-     * <code>string value = 2;</code>
+     * <code>string status = 1;</code>
      */
     com.google.protobuf.ByteString
-        getValueBytes();
+        getStatusBytes();
+
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    boolean hasValue();
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    com.example.grpc.KeyValueOuterClass.Value getValue();
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder();
+
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    boolean hasNullValue();
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    com.example.grpc.KeyValueOuterClass.NullableValue getNullValue();
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder getNullValueOrBuilder();
   }
   /**
    * Protobuf type {@code Status}
@@ -1062,8 +1911,7 @@ public final class KeyValueOuterClass {
       super(builder);
     }
     private Status() {
-      code_ = 0;
-      value_ = "";
+      status_ = "";
     }
 
     @java.lang.Override
@@ -1091,15 +1939,36 @@ public final class KeyValueOuterClass {
               }
               break;
             }
-            case 8: {
+            case 10: {
+              java.lang.String s = input.readStringRequireUtf8();
 
-              code_ = input.readInt32();
+              status_ = s;
               break;
             }
             case 18: {
-              java.lang.String s = input.readStringRequireUtf8();
+              com.example.grpc.KeyValueOuterClass.Value.Builder subBuilder = null;
+              if (value_ != null) {
+                subBuilder = value_.toBuilder();
+              }
+              value_ = input.readMessage(com.example.grpc.KeyValueOuterClass.Value.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(value_);
+                value_ = subBuilder.buildPartial();
+              }
 
-              value_ = s;
+              break;
+            }
+            case 26: {
+              com.example.grpc.KeyValueOuterClass.NullableValue.Builder subBuilder = null;
+              if (nullValue_ != null) {
+                subBuilder = nullValue_.toBuilder();
+              }
+              nullValue_ = input.readMessage(com.example.grpc.KeyValueOuterClass.NullableValue.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(nullValue_);
+                nullValue_ = subBuilder.buildPartial();
+              }
+
               break;
             }
           }
@@ -1125,47 +1994,80 @@ public final class KeyValueOuterClass {
               com.example.grpc.KeyValueOuterClass.Status.class, com.example.grpc.KeyValueOuterClass.Status.Builder.class);
     }
 
-    public static final int CODE_FIELD_NUMBER = 1;
-    private int code_;
+    public static final int STATUS_FIELD_NUMBER = 1;
+    private volatile java.lang.Object status_;
     /**
-     * <code>int32 code = 1;</code>
+     * <code>string status = 1;</code>
      */
-    public int getCode() {
-      return code_;
-    }
-
-    public static final int VALUE_FIELD_NUMBER = 2;
-    private volatile java.lang.Object value_;
-    /**
-     * <code>string value = 2;</code>
-     */
-    public java.lang.String getValue() {
-      java.lang.Object ref = value_;
+    public java.lang.String getStatus() {
+      java.lang.Object ref = status_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        value_ = s;
+        status_ = s;
         return s;
       }
     }
     /**
-     * <code>string value = 2;</code>
+     * <code>string status = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getValueBytes() {
-      java.lang.Object ref = value_;
+        getStatusBytes() {
+      java.lang.Object ref = status_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        value_ = b;
+        status_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
+    }
+
+    public static final int VALUE_FIELD_NUMBER = 2;
+    private com.example.grpc.KeyValueOuterClass.Value value_;
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    public boolean hasValue() {
+      return value_ != null;
+    }
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    public com.example.grpc.KeyValueOuterClass.Value getValue() {
+      return value_ == null ? com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
+    }
+    /**
+     * <code>.Value value = 2;</code>
+     */
+    public com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder() {
+      return getValue();
+    }
+
+    public static final int NULLVALUE_FIELD_NUMBER = 3;
+    private com.example.grpc.KeyValueOuterClass.NullableValue nullValue_;
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    public boolean hasNullValue() {
+      return nullValue_ != null;
+    }
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    public com.example.grpc.KeyValueOuterClass.NullableValue getNullValue() {
+      return nullValue_ == null ? com.example.grpc.KeyValueOuterClass.NullableValue.getDefaultInstance() : nullValue_;
+    }
+    /**
+     * <code>.NullableValue nullValue = 3;</code>
+     */
+    public com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder getNullValueOrBuilder() {
+      return getNullValue();
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1180,11 +2082,14 @@ public final class KeyValueOuterClass {
 
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (code_ != 0) {
-        output.writeInt32(1, code_);
+      if (!getStatusBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, status_);
       }
-      if (!getValueBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, value_);
+      if (value_ != null) {
+        output.writeMessage(2, getValue());
+      }
+      if (nullValue_ != null) {
+        output.writeMessage(3, getNullValue());
       }
     }
 
@@ -1193,12 +2098,16 @@ public final class KeyValueOuterClass {
       if (size != -1) return size;
 
       size = 0;
-      if (code_ != 0) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, code_);
+      if (!getStatusBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, status_);
       }
-      if (!getValueBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, value_);
+      if (value_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getValue());
+      }
+      if (nullValue_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getNullValue());
       }
       memoizedSize = size;
       return size;
@@ -1216,10 +2125,18 @@ public final class KeyValueOuterClass {
       com.example.grpc.KeyValueOuterClass.Status other = (com.example.grpc.KeyValueOuterClass.Status) obj;
 
       boolean result = true;
-      result = result && (getCode()
-          == other.getCode());
-      result = result && getValue()
-          .equals(other.getValue());
+      result = result && getStatus()
+          .equals(other.getStatus());
+      result = result && (hasValue() == other.hasValue());
+      if (hasValue()) {
+        result = result && getValue()
+            .equals(other.getValue());
+      }
+      result = result && (hasNullValue() == other.hasNullValue());
+      if (hasNullValue()) {
+        result = result && getNullValue()
+            .equals(other.getNullValue());
+      }
       return result;
     }
 
@@ -1230,10 +2147,16 @@ public final class KeyValueOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + CODE_FIELD_NUMBER;
-      hash = (53 * hash) + getCode();
-      hash = (37 * hash) + VALUE_FIELD_NUMBER;
-      hash = (53 * hash) + getValue().hashCode();
+      hash = (37 * hash) + STATUS_FIELD_NUMBER;
+      hash = (53 * hash) + getStatus().hashCode();
+      if (hasValue()) {
+        hash = (37 * hash) + VALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getValue().hashCode();
+      }
+      if (hasNullValue()) {
+        hash = (37 * hash) + NULLVALUE_FIELD_NUMBER;
+        hash = (53 * hash) + getNullValue().hashCode();
+      }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -1363,10 +2286,20 @@ public final class KeyValueOuterClass {
       }
       public Builder clear() {
         super.clear();
-        code_ = 0;
+        status_ = "";
 
-        value_ = "";
-
+        if (valueBuilder_ == null) {
+          value_ = null;
+        } else {
+          value_ = null;
+          valueBuilder_ = null;
+        }
+        if (nullValueBuilder_ == null) {
+          nullValue_ = null;
+        } else {
+          nullValue_ = null;
+          nullValueBuilder_ = null;
+        }
         return this;
       }
 
@@ -1389,8 +2322,17 @@ public final class KeyValueOuterClass {
 
       public com.example.grpc.KeyValueOuterClass.Status buildPartial() {
         com.example.grpc.KeyValueOuterClass.Status result = new com.example.grpc.KeyValueOuterClass.Status(this);
-        result.code_ = code_;
-        result.value_ = value_;
+        result.status_ = status_;
+        if (valueBuilder_ == null) {
+          result.value_ = value_;
+        } else {
+          result.value_ = valueBuilder_.build();
+        }
+        if (nullValueBuilder_ == null) {
+          result.nullValue_ = nullValue_;
+        } else {
+          result.nullValue_ = nullValueBuilder_.build();
+        }
         onBuilt();
         return result;
       }
@@ -1432,12 +2374,15 @@ public final class KeyValueOuterClass {
 
       public Builder mergeFrom(com.example.grpc.KeyValueOuterClass.Status other) {
         if (other == com.example.grpc.KeyValueOuterClass.Status.getDefaultInstance()) return this;
-        if (other.getCode() != 0) {
-          setCode(other.getCode());
-        }
-        if (!other.getValue().isEmpty()) {
-          value_ = other.value_;
+        if (!other.getStatus().isEmpty()) {
+          status_ = other.status_;
           onChanged();
+        }
+        if (other.hasValue()) {
+          mergeValue(other.getValue());
+        }
+        if (other.hasNullValue()) {
+          mergeNullValue(other.getNullValue());
         }
         onChanged();
         return this;
@@ -1465,99 +2410,307 @@ public final class KeyValueOuterClass {
         return this;
       }
 
-      private int code_ ;
+      private java.lang.Object status_ = "";
       /**
-       * <code>int32 code = 1;</code>
+       * <code>string status = 1;</code>
        */
-      public int getCode() {
-        return code_;
-      }
-      /**
-       * <code>int32 code = 1;</code>
-       */
-      public Builder setCode(int value) {
-        
-        code_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>int32 code = 1;</code>
-       */
-      public Builder clearCode() {
-        
-        code_ = 0;
-        onChanged();
-        return this;
-      }
-
-      private java.lang.Object value_ = "";
-      /**
-       * <code>string value = 2;</code>
-       */
-      public java.lang.String getValue() {
-        java.lang.Object ref = value_;
+      public java.lang.String getStatus() {
+        java.lang.Object ref = status_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          value_ = s;
+          status_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>string status = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getValueBytes() {
-        java.lang.Object ref = value_;
+          getStatusBytes() {
+        java.lang.Object ref = status_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          value_ = b;
+          status_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>string status = 1;</code>
        */
-      public Builder setValue(
+      public Builder setStatus(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        value_ = value;
+        status_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>string status = 1;</code>
        */
-      public Builder clearValue() {
+      public Builder clearStatus() {
         
-        value_ = getDefaultInstance().getValue();
+        status_ = getDefaultInstance().getStatus();
         onChanged();
         return this;
       }
       /**
-       * <code>string value = 2;</code>
+       * <code>string status = 1;</code>
        */
-      public Builder setValueBytes(
+      public Builder setStatusBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        value_ = value;
+        status_ = value;
         onChanged();
         return this;
+      }
+
+      private com.example.grpc.KeyValueOuterClass.Value value_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder> valueBuilder_;
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public boolean hasValue() {
+        return valueBuilder_ != null || value_ != null;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.Value getValue() {
+        if (valueBuilder_ == null) {
+          return value_ == null ? com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
+        } else {
+          return valueBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public Builder setValue(com.example.grpc.KeyValueOuterClass.Value value) {
+        if (valueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          value_ = value;
+          onChanged();
+        } else {
+          valueBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public Builder setValue(
+          com.example.grpc.KeyValueOuterClass.Value.Builder builderForValue) {
+        if (valueBuilder_ == null) {
+          value_ = builderForValue.build();
+          onChanged();
+        } else {
+          valueBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public Builder mergeValue(com.example.grpc.KeyValueOuterClass.Value value) {
+        if (valueBuilder_ == null) {
+          if (value_ != null) {
+            value_ =
+              com.example.grpc.KeyValueOuterClass.Value.newBuilder(value_).mergeFrom(value).buildPartial();
+          } else {
+            value_ = value;
+          }
+          onChanged();
+        } else {
+          valueBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public Builder clearValue() {
+        if (valueBuilder_ == null) {
+          value_ = null;
+          onChanged();
+        } else {
+          value_ = null;
+          valueBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.Value.Builder getValueBuilder() {
+        
+        onChanged();
+        return getValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.ValueOrBuilder getValueOrBuilder() {
+        if (valueBuilder_ != null) {
+          return valueBuilder_.getMessageOrBuilder();
+        } else {
+          return value_ == null ?
+              com.example.grpc.KeyValueOuterClass.Value.getDefaultInstance() : value_;
+        }
+      }
+      /**
+       * <code>.Value value = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder> 
+          getValueFieldBuilder() {
+        if (valueBuilder_ == null) {
+          valueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.example.grpc.KeyValueOuterClass.Value, com.example.grpc.KeyValueOuterClass.Value.Builder, com.example.grpc.KeyValueOuterClass.ValueOrBuilder>(
+                  getValue(),
+                  getParentForChildren(),
+                  isClean());
+          value_ = null;
+        }
+        return valueBuilder_;
+      }
+
+      private com.example.grpc.KeyValueOuterClass.NullableValue nullValue_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.NullableValue, com.example.grpc.KeyValueOuterClass.NullableValue.Builder, com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder> nullValueBuilder_;
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public boolean hasNullValue() {
+        return nullValueBuilder_ != null || nullValue_ != null;
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.NullableValue getNullValue() {
+        if (nullValueBuilder_ == null) {
+          return nullValue_ == null ? com.example.grpc.KeyValueOuterClass.NullableValue.getDefaultInstance() : nullValue_;
+        } else {
+          return nullValueBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public Builder setNullValue(com.example.grpc.KeyValueOuterClass.NullableValue value) {
+        if (nullValueBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          nullValue_ = value;
+          onChanged();
+        } else {
+          nullValueBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public Builder setNullValue(
+          com.example.grpc.KeyValueOuterClass.NullableValue.Builder builderForValue) {
+        if (nullValueBuilder_ == null) {
+          nullValue_ = builderForValue.build();
+          onChanged();
+        } else {
+          nullValueBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public Builder mergeNullValue(com.example.grpc.KeyValueOuterClass.NullableValue value) {
+        if (nullValueBuilder_ == null) {
+          if (nullValue_ != null) {
+            nullValue_ =
+              com.example.grpc.KeyValueOuterClass.NullableValue.newBuilder(nullValue_).mergeFrom(value).buildPartial();
+          } else {
+            nullValue_ = value;
+          }
+          onChanged();
+        } else {
+          nullValueBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public Builder clearNullValue() {
+        if (nullValueBuilder_ == null) {
+          nullValue_ = null;
+          onChanged();
+        } else {
+          nullValue_ = null;
+          nullValueBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.NullableValue.Builder getNullValueBuilder() {
+        
+        onChanged();
+        return getNullValueFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      public com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder getNullValueOrBuilder() {
+        if (nullValueBuilder_ != null) {
+          return nullValueBuilder_.getMessageOrBuilder();
+        } else {
+          return nullValue_ == null ?
+              com.example.grpc.KeyValueOuterClass.NullableValue.getDefaultInstance() : nullValue_;
+        }
+      }
+      /**
+       * <code>.NullableValue nullValue = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.example.grpc.KeyValueOuterClass.NullableValue, com.example.grpc.KeyValueOuterClass.NullableValue.Builder, com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder> 
+          getNullValueFieldBuilder() {
+        if (nullValueBuilder_ == null) {
+          nullValueBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.example.grpc.KeyValueOuterClass.NullableValue, com.example.grpc.KeyValueOuterClass.NullableValue.Builder, com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder>(
+                  getNullValue(),
+                  getParentForChildren(),
+                  isClean());
+          nullValue_ = null;
+        }
+        return nullValueBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1608,11 +2761,587 @@ public final class KeyValueOuterClass {
 
   }
 
+  public interface NullableValueOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:NullableValue)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    boolean hasNullableString();
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    com.google.protobuf.StringValue getNullableString();
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    com.google.protobuf.StringValueOrBuilder getNullableStringOrBuilder();
+  }
+  /**
+   * Protobuf type {@code NullableValue}
+   */
+  public  static final class NullableValue extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:NullableValue)
+      NullableValueOrBuilder {
+    // Use NullableValue.newBuilder() to construct.
+    private NullableValue(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private NullableValue() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
+    }
+    private NullableValue(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!input.skipField(tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.StringValue.Builder subBuilder = null;
+              if (nullableString_ != null) {
+                subBuilder = nullableString_.toBuilder();
+              }
+              nullableString_ = input.readMessage(com.google.protobuf.StringValue.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(nullableString_);
+                nullableString_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.example.grpc.KeyValueOuterClass.internal_static_NullableValue_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.example.grpc.KeyValueOuterClass.internal_static_NullableValue_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.example.grpc.KeyValueOuterClass.NullableValue.class, com.example.grpc.KeyValueOuterClass.NullableValue.Builder.class);
+    }
+
+    public static final int NULLABLESTRING_FIELD_NUMBER = 1;
+    private com.google.protobuf.StringValue nullableString_;
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    public boolean hasNullableString() {
+      return nullableString_ != null;
+    }
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    public com.google.protobuf.StringValue getNullableString() {
+      return nullableString_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : nullableString_;
+    }
+    /**
+     * <code>.google.protobuf.StringValue nullableString = 1;</code>
+     */
+    public com.google.protobuf.StringValueOrBuilder getNullableStringOrBuilder() {
+      return getNullableString();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (nullableString_ != null) {
+        output.writeMessage(1, getNullableString());
+      }
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (nullableString_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getNullableString());
+      }
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof com.example.grpc.KeyValueOuterClass.NullableValue)) {
+        return super.equals(obj);
+      }
+      com.example.grpc.KeyValueOuterClass.NullableValue other = (com.example.grpc.KeyValueOuterClass.NullableValue) obj;
+
+      boolean result = true;
+      result = result && (hasNullableString() == other.hasNullableString());
+      if (hasNullableString()) {
+        result = result && getNullableString()
+            .equals(other.getNullableString());
+      }
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasNullableString()) {
+        hash = (37 * hash) + NULLABLESTRING_FIELD_NUMBER;
+        hash = (53 * hash) + getNullableString().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static com.example.grpc.KeyValueOuterClass.NullableValue parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(com.example.grpc.KeyValueOuterClass.NullableValue prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code NullableValue}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:NullableValue)
+        com.example.grpc.KeyValueOuterClass.NullableValueOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_NullableValue_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_NullableValue_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.example.grpc.KeyValueOuterClass.NullableValue.class, com.example.grpc.KeyValueOuterClass.NullableValue.Builder.class);
+      }
+
+      // Construct using com.example.grpc.KeyValueOuterClass.NullableValue.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (nullableStringBuilder_ == null) {
+          nullableString_ = null;
+        } else {
+          nullableString_ = null;
+          nullableStringBuilder_ = null;
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.example.grpc.KeyValueOuterClass.internal_static_NullableValue_descriptor;
+      }
+
+      public com.example.grpc.KeyValueOuterClass.NullableValue getDefaultInstanceForType() {
+        return com.example.grpc.KeyValueOuterClass.NullableValue.getDefaultInstance();
+      }
+
+      public com.example.grpc.KeyValueOuterClass.NullableValue build() {
+        com.example.grpc.KeyValueOuterClass.NullableValue result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.example.grpc.KeyValueOuterClass.NullableValue buildPartial() {
+        com.example.grpc.KeyValueOuterClass.NullableValue result = new com.example.grpc.KeyValueOuterClass.NullableValue(this);
+        if (nullableStringBuilder_ == null) {
+          result.nullableString_ = nullableString_;
+        } else {
+          result.nullableString_ = nullableStringBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.example.grpc.KeyValueOuterClass.NullableValue) {
+          return mergeFrom((com.example.grpc.KeyValueOuterClass.NullableValue)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.example.grpc.KeyValueOuterClass.NullableValue other) {
+        if (other == com.example.grpc.KeyValueOuterClass.NullableValue.getDefaultInstance()) return this;
+        if (other.hasNullableString()) {
+          mergeNullableString(other.getNullableString());
+        }
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.example.grpc.KeyValueOuterClass.NullableValue parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.example.grpc.KeyValueOuterClass.NullableValue) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private com.google.protobuf.StringValue nullableString_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> nullableStringBuilder_;
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public boolean hasNullableString() {
+        return nullableStringBuilder_ != null || nullableString_ != null;
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public com.google.protobuf.StringValue getNullableString() {
+        if (nullableStringBuilder_ == null) {
+          return nullableString_ == null ? com.google.protobuf.StringValue.getDefaultInstance() : nullableString_;
+        } else {
+          return nullableStringBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public Builder setNullableString(com.google.protobuf.StringValue value) {
+        if (nullableStringBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          nullableString_ = value;
+          onChanged();
+        } else {
+          nullableStringBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public Builder setNullableString(
+          com.google.protobuf.StringValue.Builder builderForValue) {
+        if (nullableStringBuilder_ == null) {
+          nullableString_ = builderForValue.build();
+          onChanged();
+        } else {
+          nullableStringBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public Builder mergeNullableString(com.google.protobuf.StringValue value) {
+        if (nullableStringBuilder_ == null) {
+          if (nullableString_ != null) {
+            nullableString_ =
+              com.google.protobuf.StringValue.newBuilder(nullableString_).mergeFrom(value).buildPartial();
+          } else {
+            nullableString_ = value;
+          }
+          onChanged();
+        } else {
+          nullableStringBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public Builder clearNullableString() {
+        if (nullableStringBuilder_ == null) {
+          nullableString_ = null;
+          onChanged();
+        } else {
+          nullableString_ = null;
+          nullableStringBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public com.google.protobuf.StringValue.Builder getNullableStringBuilder() {
+        
+        onChanged();
+        return getNullableStringFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      public com.google.protobuf.StringValueOrBuilder getNullableStringOrBuilder() {
+        if (nullableStringBuilder_ != null) {
+          return nullableStringBuilder_.getMessageOrBuilder();
+        } else {
+          return nullableString_ == null ?
+              com.google.protobuf.StringValue.getDefaultInstance() : nullableString_;
+        }
+      }
+      /**
+       * <code>.google.protobuf.StringValue nullableString = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder> 
+          getNullableStringFieldBuilder() {
+        if (nullableStringBuilder_ == null) {
+          nullableStringBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              com.google.protobuf.StringValue, com.google.protobuf.StringValue.Builder, com.google.protobuf.StringValueOrBuilder>(
+                  getNullableString(),
+                  getParentForChildren(),
+                  isClean());
+          nullableString_ = null;
+        }
+        return nullableStringBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return this;
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:NullableValue)
+    }
+
+    // @@protoc_insertion_point(class_scope:NullableValue)
+    private static final com.example.grpc.KeyValueOuterClass.NullableValue DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new com.example.grpc.KeyValueOuterClass.NullableValue();
+    }
+
+    public static com.example.grpc.KeyValueOuterClass.NullableValue getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<NullableValue>
+        PARSER = new com.google.protobuf.AbstractParser<NullableValue>() {
+      public NullableValue parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new NullableValue(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<NullableValue> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<NullableValue> getParserForType() {
+      return PARSER;
+    }
+
+    public com.example.grpc.KeyValueOuterClass.NullableValue getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_SetKeyValueRequest_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_SetKeyValueRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_Value_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_Value_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_GetValueRequest_descriptor;
   private static final 
@@ -1623,6 +3352,11 @@ public final class KeyValueOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_Status_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_NullableValue_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_NullableValue_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1632,13 +3366,20 @@ public final class KeyValueOuterClass {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016keyValue.proto\"0\n\022SetKeyValueRequest\022\013" +
-      "\n\003key\030\001 \001(\005\022\r\n\005value\030\002 \001(\t\"\036\n\017GetValueRe" +
-      "quest\022\013\n\003key\030\001 \001(\005\"%\n\006Status\022\014\n\004code\030\001 \001" +
-      "(\005\022\r\n\005value\030\002 \001(\t2Y\n\010KeyValue\022\'\n\005setKV\022\023" +
-      ".SetKeyValueRequest\032\007.Status\"\000\022$\n\005getKV\022" +
-      "\020.GetValueRequest\032\007.Status\"\000B\022\n\020com.exam" +
-      "ple.grpcb\006proto3"
+      "\n\016keyValue.proto\032\036google/protobuf/wrappe" +
+      "rs.proto\"8\n\022SetKeyValueRequest\022\013\n\003key\030\001 " +
+      "\001(\014\022\025\n\005value\030\002 \001(\0132\006.Value\"m\n\005Value\022\017\n\007v" +
+      "ersion\030\001 \001(\003\022\021\n\ttimestamp\030\002 \001(\003\022\014\n\004data\030" +
+      "\003 \001(\014\0222\n\rnullableValue\030\004 \001(\0132\033.google.pr" +
+      "otobuf.BytesValue\"\036\n\017GetValueRequest\022\013\n\003" +
+      "key\030\001 \001(\014\"R\n\006Status\022\016\n\006status\030\001 \001(\t\022\025\n\005v" +
+      "alue\030\002 \001(\0132\006.Value\022!\n\tnullValue\030\003 \001(\0132\016." +
+      "NullableValue\"E\n\rNullableValue\0224\n\016nullab" +
+      "leString\030\001 \001(\0132\034.google.protobuf.StringV",
+      "alue2Y\n\010KeyValue\022\'\n\005setKV\022\023.SetKeyValueR" +
+      "equest\032\007.Status\"\000\022$\n\005getKV\022\020.GetValueReq" +
+      "uest\032\007.Status\"\000B\022\n\020com.example.grpcb\006pro" +
+      "to3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1651,6 +3392,7 @@ public final class KeyValueOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          com.google.protobuf.WrappersProto.getDescriptor(),
         }, assigner);
     internal_static_SetKeyValueRequest_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -1658,18 +3400,31 @@ public final class KeyValueOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_SetKeyValueRequest_descriptor,
         new java.lang.String[] { "Key", "Value", });
-    internal_static_GetValueRequest_descriptor =
+    internal_static_Value_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_Value_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_Value_descriptor,
+        new java.lang.String[] { "Version", "Timestamp", "Data", "NullableValue", });
+    internal_static_GetValueRequest_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_GetValueRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_GetValueRequest_descriptor,
         new java.lang.String[] { "Key", });
     internal_static_Status_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_Status_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_Status_descriptor,
-        new java.lang.String[] { "Code", "Value", });
+        new java.lang.String[] { "Status", "Value", "NullValue", });
+    internal_static_NullableValue_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_NullableValue_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_NullableValue_descriptor,
+        new java.lang.String[] { "NullableString", });
+    com.google.protobuf.WrappersProto.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
